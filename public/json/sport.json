@@ -1,0 +1,64 @@
+{
+    "Q1": {
+        "Type": "text",     
+        "Question" : "Who won the world cup of football in 2014?",
+        "Source" : "",
+        "Answer" : "GERMANY"
+    },
+    "Q2": {     
+        "Type": "text",     
+        "Question" : "Stephen Curry is currently playing for? ",
+        "Source" : "",
+        "Answer" : "GOLDEN STATE WARRIORS"
+    },
+    "Q3": {
+        "Type": "audio",     
+        "Question" : "From who is this voice?",
+        "Source" : "audio/sport/dennis_bergkamp.mp3",
+        "Answer" : "JACK VAN GELDER"
+    },
+    "Q4": {
+        "Type": "video",     
+        "Question" : "What happend with the Doctor?",
+        "Source" : "video/sport/verzorger.mp4",
+        "Answer" : "HE GOT A RED CARD"
+    },
+    "Q5": {
+        "Type": "text",     
+        "Question" : "Who was the winner of the Serie A in 2015/2016?",
+        "Source" : "",
+        "Answer" : "JUVENTUS"
+    },
+    "Q6": {
+        "Type": "text",     
+        "Question" : "How many times did Lance Armstrong win the Toure de France before he got busted with doping?",
+        "Source" : "",
+        "Answer" : "7"
+    },
+    "Q7": {
+        "Type": "text",     
+        "Question" : "What is the first name of the dart player Van Gerwen",
+        "Source" : "",
+        "Answer" : "MICHAEL"
+    },
+    "Q8": {
+        "Type": "image",     
+        "Question" : "Who is this sporter?",
+        "Source" : "img/quiz/sport/bb_picture.jpg",
+        "Answer" : "BJORN BORG"
+    },
+    "Q9": {
+        "Type": "image",     
+        "Question" : "Who is this sporter?",
+        "Source" : "img/quiz/sport/jos_picture.jpg",
+        "Answer" : "JOS VERSTAPPEN"
+    },
+    "Q10": {
+        "Type": "image",     
+        "Question" : "Who is this sporter?",
+        "Source" : "img/quiz/sport/tysong_picture.jpg",
+        "Answer" : "TYSON GAY"
+    }
+
+
+}
