@@ -38,53 +38,39 @@
 	</div>
 
 	<div id="player">
-		<div id="plscreenLogin" class="screen">
-			<div class="labels">Name:</div>
-			<input id="inputName"></input>
-			<div class="labels">Room ID:</div>
-			<input id="inputRoomId"></input>
-			<div id="btnJoinGame" class="btn">Join Game</div>
-			<div id="roomError"></div>
-		</div>
-		<div id="plscreenCharacterCreation" class="screen">			
-			<div id="CCBody">
-				<div id="CCarrowLeft" class="CCarrows"><div class="arrowGraphic"></div></div>
-				<div id="CCarrowRight" class="CCarrows"><div class="arrowGraphic"></div></div>
+		<div id="playerScreenWrapper">
+			<div id="playerScreen">
+
+				<div id="mobileIntroScreen">
+
+					<div id="connectText">CONNECT <BR> YOUR PHONE</div>
+					
+					<div id="roomNumberText">ROOM NUMBER:</div>
+					<input type="number" name="roomNumber" id="inputRoomId">
+					<div id="nameText">NAME:</div>
+					<input type="text" name="name" id="inputName">
+
+					<img id="btnJoinGame" class="btn" src="img/mobile/next_btn.png">
+				</div>
+
+				<div id="mobileCharacterScreen">
+					<div id="chooseCharText">CHOOSE YOUR <BR> CHARACTER!</div>
+					<img id="tunnel" src="img/mobile/tunnel.png">
+					<div id="allChars"></div>
+					<div id="deskWrapper"></div>
+					<img src="img/mobile/done_btn.png" id="btnCreateCharacter">
+
+					<img id="arrowLeft" src="img/mobile/arrow_left.png">
+					<img id="arrowRight" src="img/mobile/arrow_rigth.png">
+
+				</div>
+				
+				<img src="img/mobile/logo.png" id="logo">
 			</div>
 
-			<div id="character"></div>
-
-			<div id="btnCreateCharacter" class="btn">Create Character</div>
 		</div>
-		<div id="plscreenYourAnswer" class="screen">
-			<div class="labels">Your Answer:</div>
-			<input id="inputAnswer"></input>
-		</div>
-		<div id="plscreenAnswers" class="screen">
-			<div class="answerButton">1</div>
-			<div class="answerButton">2</div>
-			<div class="answerButton">3</div>
-			<div class="answerButton">4</div>
-			<div class="answerButton">5</div>
-		</div>
-		<div id="plscreenLikes" class="screen">
-			<div class="answerButton">1</div>
-			<div class="likeButton"></div>
-			<div class="hateButton"></div>
-			<div class="answerButton">2</div>
-			<div class="likeButton"></div>
-			<div class="hateButton"></div>
-			<div class="answerButton">3</div>
-			<div class="likeButton"></div>
-			<div class="hateButton"></div>
-			<div class="answerButton">4</div>
-			<div class="likeButton"></div>
-			<div class="hateButton"></div>
-			<div class="answerButton">5</div>
-			<div class="likeButton"></div>
-			<div class="hateButton"></div>
-		</div>
-		<div id="plscreenWait" class="screen">Waiting for other players.</div>
+		<div id="roomError"></div>
+		<div id="blackOverlay"></div>
 	</div>
 
 	<script src="https://s0.2mdn.net/ads/studio/cached_libs/tweenmax_1.18.5_23b0de6da0ee295131e32a500470610c_min.js"></script>
@@ -92,7 +78,7 @@
 
     <script src="/socket.io/socket.io.js"></script>    
 	<!-- build:js js/Temple.min.js -->
-	<script src="js/main2.js"></script>
+	<script src="js/main.js"></script>
 	<!-- /build -->
 	<!--<script src="js/bundle.js"></script>-->
 </body>

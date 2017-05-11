@@ -1,431 +1,249 @@
 window.$ = window.jQuery || function(e,t,l){var n={"#":"getElementById",".":"getElementsByClassName","@":"getElementsByName","=":"getElementsByTagName","*":"querySelectorAll"}[e[0]],m=(t===l?document:t)[n](e.slice(1));return m.length<2?m[0]:m};
 function shuffle(o){for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);return o;}
 
-function loadJSON(callback) {   
-    var xobj = new XMLHttpRequest();
-        xobj.overrideMimeType("application/json");
-        if(catIsTv == true){
-            xobj.open('GET', 'json/tv_show_intro.json', true);
-        }
-        else if(catIsSport == true){
-            xobj.open('GET', 'json/sport.json', true);
-        }
-        else{
-            xobj.open('GET', 'json/sport.json', true);
-        }
-    xobj.onreadystatechange = function () {
-          if (xobj.readyState == 4 && xobj.status == "200") {
-            callback(xobj.responseText);
-          }
-    };
-    xobj.send(null);  
+var socket = io();
+
+checkSize();
+
+//SERVER
+$(".screen").hide();
+$("#host").hide();
+$("#player").hide();
+$("#roomError").hide();
+$("#btnStartGame").hide();
+$("#mobileCharacterScreen").hide();
+
+
+
+//Listeners
+$("#btnJoinGame").click(joinGame);
+$("#btnTitleCreateGame").click(createGame);
+$("#btnTitleStartGame").click(startGame);
+$("#btnTitleJoinGame").click(titleJoinGame);
+$("#btnCreateCharacter").click(createCharacter);
+$("#btnCreateCharacter").click(createCharacter);
+
+// $(".CCarrowRight").addEventListener("click", this.rightArrowClick.bind(this));
+// $(".CCarrowLeft").addEventListener("click", this.leftArrowClick.bind(this));
+
+//CREATE GAME
+function createGame(){
+    $("#hscreenTitle").hide();
+    $("#host").show();
+    $("#hscreenLogin").show();
+    socket.emit('createGame');
 }
 
-document.body.onload = onReady();
-
-function onReady() {
-    setVars();
-    setEventlisteners();
-}
-
-function getJSON(){
-    questionsAnswersArray = [];
+//START GAME
+function startGame(){
     
-    loadJSON(function(response) {
-        var QandA = JSON.parse(response);
-        for (var i = 1; i <= Object.keys(QandA).length ; i++) {
-            questionsAnswersArray.push({type:QandA["Q"+i].Type, question:QandA["Q"+i].Question, source:QandA["Q"+i].Source, answer:QandA["Q"+i].Answer});
-            if(i == Object.keys(QandA).length){
-                questionsAnswersArray = shuffle(questionsAnswersArray);
-                setNewQuestion();
-            }
-        }
-     });
 }
 
-function loadTV(){
-    catIsTv = true;
-    catIsSport = false;
-    getJSON();
+function checkSize(){
+
+    var screenHeight = window.innerHeight;
+    var screenWidth = window.innerWidth;
+    var gameHeight = playerScreen.offsetHeight; 
+
+    var totalScreen = screenHeight/gameHeight;
+
+    TweenMax.set(playerScreen, {scale:totalScreen, transformOrigin: "0px 0px"})
+    TweenMax.set(playerScreenWrapper, {height:playerScreen.offsetHeight*totalScreen, width:playerScreen.offsetWidth*totalScreen})
+    TweenMax.set(blackOverlay, {display:"none"})
 }
 
-function loadSportJson(){
-    catIsSport = true;
-    catIsTv = false;
-    getJSON();
+function joinGameAnimation(){
+    $("#mobileIntroScreen").hide();
+    $("#mobileCharacterScreen").show();
+    characterSetup();
+    characterAnimation();
 }
 
-function setVars(){
-    activePhones = 0;
+function characterSetup(){
+    arrowLeft.addEventListener("click", navLeftClick);
+    arrowRight.addEventListener("click", navRigthClick);
 
-    phone1Active = false;
-    phone2Active = false;
-    phone3Active = false;
-    phone4Active = false;
+    currentCharacter = ['Indian', "Sumo", "Mime"];
+    mobileClickAllowed = true;
+    currentCarNumber = 0;
 
-    player1Score = 0;
-    player2Score = 0;
-    player3Score = 0;
-    player4Score = 0;
+    TweenMax.set([allChars, deskWrapper], {width: currentCharacter.length*900})
+    TweenMax.set(arrowLeft, {display:"none"})
 
-    answerPhone1Var = "";
-    answerPhone2Var = "";
-    answerPhone3Var = "";
-    answerPhone4Var = "";
+    for (var i= 0; i <currentCharacter.length; i++) {
 
-    answersGiven = 0;
-
-    phoneArray = [phone1, phone2. phone3, phone4]
-
-    currentNumber = 0;
-
-    $("#createCharacterScreen").hide();
-}
-
-
-function setEventlisteners(){
-    sendPhone1.addEventListener("click", function(){setName(event ,namePhone1.value)});
-    sendPhone2.addEventListener("click", function(){setName(event ,namePhone2.value)});
-    sendPhone3.addEventListener("click", function(){setName(event ,namePhone3.value)});
-    sendPhone4.addEventListener("click", function(){setName(event ,namePhone4.value)});
-    startGameBtn.addEventListener("click", showCat);
-    
-    sendAnswerPhone1.addEventListener("click", function(){setAnswer(event ,answerPhone1.value)});
-    sendAnswerPhone2.addEventListener("click", function(){setAnswer(event ,answerPhone2.value)});
-    sendAnswerPhone3.addEventListener("click", function(){setAnswer(event ,answerPhone3.value)});
-    sendAnswerPhone4.addEventListener("click", function(){setAnswer(event ,answerPhone4.value)});
-
-    nextQuestion.addEventListener("click", setNewQuestion);
-    
-    loadTvShows.addEventListener("click", loadTV);
-    loadSport.addEventListener("click", loadSportJson);
-
-    document.getElementById("joinGameBtn").addEventListener("click", joinGameRoom);
-    document.getElementById("createCharacterBtn").addEventListener("click", createCharacter);
-}
-
-function setName(e, value){
-    switch(e.target) {
-    case sendPhone1:
-        name1.innerHTML = value;
-        phone1Active = true;
-        $(".phoneIntro")[0].style.display = "none";
-        break;
-    case sendPhone2:
-        name2.innerHTML = value;
-        phone2Active = true;
-        $(".phoneIntro")[1].style.display = "none";
-        break;
-    case sendPhone3:
-        name3.innerHTML = value;
-        phone3Active = true;
-        $(".phoneIntro")[2].style.display = "none";
-        break;
-    case sendPhone4:
-        name4.innerHTML = value;
-        phone4Active = true;
-        $(".phoneIntro")[3].style.display = "none";
-        break;
-    }
-
-    activePhones+=1;
-
-    totalPlayers.innerHTML = "Total players = " + activePhones;
-}
-
-function showCat(){
-    startScreen.style.display = "none";
-    chooseCat.style.display = "block";
-
-    this.masterTimeline = new TimelineMax({ paused: false, repeat:-1 });
-        this.masterTimeline.add("start")
-            .fromTo($(".lightWrapper"), 7.5,{rotation:'+=40'},{rotation:'-=40', ease:Power2.easeInOut}, "start")
-            .to($(".blue"), 3,{opacity:0, ease:Power2.easeInOut}, "3")
-            .to($(".yellow"), 3,{opacity:0.5, ease:Power2.easeInOut}, "3")
-            .to($(".yellow"), 3,{opacity:0, ease:Power2.easeInOut}, "6")
-            .to($(".red"), 3,{opacity:0.5, ease:Power2.easeInOut}, "6")
-            .to($(".lightWrapper"), 7.5, {rotation:"+=40", ease:Power2.easeInOut}, "7.5")
-            .to($(".red"), 3,{opacity:0, ease:Power2.easeInOut}, "9")
-            .to($(".green"), 3,{opacity:0.5, ease:Power2.easeInOut}, "9")
-            .to($(".green"), 3,{opacity:0, ease:Power2.easeInOut}, "12")
-            .to($(".blue"), 3,{opacity:0.5, ease:Power2.easeInOut}, "12");
-}
-
-function setAnswer(e, value){
-    var value = value.toUpperCase();
-
-    if(value.indexOf(questionsAnswersArray[currentNumber].answer) >-1){
-        alert("Your answer is the right answer... Choose a new answer!!!")
-        return;
-    }
-
-    switch(e.target) {
-    case sendAnswerPhone1:
-        answerPhone1Var = value;
-        $(".phoneQuestionScreen")[0].style.display = "none";        
-        scorePlayer1.style.display = "block";        
-        break;
-    case sendAnswerPhone2:
-        answerPhone2Var = value;
-        $(".phoneQuestionScreen")[1].style.display = "none";        
-        scorePlayer2.style.display = "block";        
-        break;
-    case sendAnswerPhone3:
-        answerPhone3Var = value;
-        $(".phoneQuestionScreen")[2].style.display = "none";        
-        scorePlayer3.style.display = "block";        
-        break;
-    case sendAnswerPhone4:
-        answerPhone4Var = value;
-        $(".phoneQuestionScreen")[3].style.display = "none";        
-        scorePlayer4.style.display = "block";        
-        break;
-    }
-
-    answersGiven += 1;
-
-    if(answersGiven == activePhones){
-        showAnswers();
-        answersGiven = 0;
-    }
-
-
-}
-
-function showAnswers(){
-    if(questionsAnswersArray[currentNumber].type == "audio"|| questionsAnswersArray[currentNumber].type == "image" || questionsAnswersArray[currentNumber].type == "video"){
-        questionSource.remove();
-    }
-    questionSourceText.remove();
-    questionScreen.style.display = "none";
-    answerScreen.style.display = "block";
-
-    showHide('.phoneAnswerScreen','block');
-
-    answer5.innerHTML = questionsAnswersArray[currentNumber].answer;
-    
-    for (var i = 0; i <= phoneArray.length; i++) {
-
-        if(window["answerPhone" + (i+1) + "Var"].length > 0){
-            window["answer" + (i+1)].innerHTML = window["answerPhone" + (i+1) + "Var"];
-        }
-        else{
-            window["answer" + (i+1)].style.display = "none";
-            showHide('.answer'+(i+1)+'Phone','none');
-        }
+        this["characterWrapper" + i] = document.createElement('div');
+        this["leftArmWrapper"+ i] = document.createElement('div');
+        this["leftUpperArm" +i] = document.createElement('img');
+        this["leftLowerArm" +i] = document.createElement('img');
+        this["rightArmWrapper" +i] = document.createElement('div');
+        this["rightUpperArm" +i] = document.createElement('img');
+        this["rightLowerArm" +i] = document.createElement('img');
+        this["body" +i] = document.createElement('img');
+        this["headWrapper" +i] = document.createElement('div');
+        this["face" +i] = document.createElement('img');
+        this["hair" +i] = document.createElement('img');
+        this["desk" +i] = document.createElement('img');
         
-        for (var d =0; d <= getRandom(0, (i+1)); d++) {
-            window["answer" + (i+1)].parentNode.insertBefore(window["answer" + (i+1)], window["answer" + (i+1)].previousElementSibling);
-            
-            var answerMobile = document.querySelectorAll(".answer" + (i+1)+ "Phone");
-            for (var q =0; q < answerMobile.length; q++) {
-                answerMobile[q].addEventListener("click", checkAnswer);
-                answerMobile[q].parentNode.insertBefore(answerMobile[q], answerMobile[q].previousElementSibling);
-                answerMobile[q].innerHTML = window["answerPhone" + (i+1) + "Var"];
-            }
-        }
+        this["characterWrapper"+i].className = 'characterWrapper';
+        this["leftArmWrapper"+i].className = 'leftArmWrapper';
+        this["leftUpperArm"+i].className = 'leftUpperArm';
+        this["leftLowerArm"+i].className = 'leftLowerArm';
+        this["rightArmWrapper"+i].className = 'rightArmWrapper';
+        this["rightUpperArm"+i].className = 'rightUpperArm';
+        this["rightLowerArm"+i].className = 'rightLowerArm';
+        this["body"+i].className = 'body';
+        this["headWrapper"+i].className = 'headWrapper';
+        this["face"+i].className = 'face';
+        this["hair"+i].className = 'hair';
+        this["desk"+i].className = 'desk';
+        
+        allChars.appendChild(this["characterWrapper"+i]);
+        $(".characterWrapper")[i].appendChild(this["leftArmWrapper"+i]);
+        $(".leftArmWrapper")[i].appendChild(this["leftUpperArm"+i]);
+        $(".leftArmWrapper")[i].appendChild(this["leftLowerArm"+i]);
+        $(".characterWrapper")[i].appendChild(this["rightArmWrapper"+i]);
+        $(".rightArmWrapper")[i].appendChild(this["rightUpperArm"+i]);
+        $(".rightArmWrapper")[i].appendChild(this["rightLowerArm"+i]);
+        $(".characterWrapper")[i].appendChild(this["body"+i]);
+        $(".characterWrapper")[i].appendChild(this["headWrapper"+i]);
+        $(".headWrapper")[i].appendChild(this["face"+i]);
+        $(".headWrapper")[i].appendChild(this["hair"+i]);
+        deskWrapper.appendChild(this["desk"+i]);
+
+        $(".hair")[i].src="img/character"+currentCharacter[i]+"/hair.png"
+        $(".face")[i].src="img/character"+currentCharacter[i]+"/face.png"
+        $(".body")[i].src="img/character"+currentCharacter[i]+"/body.png"
+        $(".rightUpperArm")[i].src="img/character"+currentCharacter[i]+"/rightUpperArm.png"
+        $(".rightLowerArm")[i].src="img/character"+currentCharacter[i]+"/rightLowerArm.png"
+        $(".leftUpperArm")[i].src="img/character"+currentCharacter[i]+"/leftUpperArm.png"
+        $(".leftLowerArm")[i].src="img/character"+currentCharacter[i]+"/leftLowerArm.png"
+        $(".desk")[i].src="img/mobile/desk.png";
     }
 
-    for (var i =0; i <= getRandom(0, 5); i++) {
-        answer5.parentNode.insertBefore(answer5, answer5.previousElementSibling);
-        var answerMobile = document.querySelectorAll(".answer5Phone");
-
-        for (var s =0; s < answerMobile.length; s++) {
-            answerMobile[s].parentNode.insertBefore(answerMobile[s], answerMobile[s].previousElementSibling);
-            answerMobile[s].innerHTML = questionsAnswersArray[currentNumber].answer;
-            answerMobile[s].addEventListener("click", checkAnswer);
-        }
-    }
-
-    currentNumber ++;
 }
+function navLeftClick(){
+    if(mobileClickAllowed){
+        mobileClickAllowed = false;
+        stopCharacterAnimation();
+        TweenMax.to([allChars, deskWrapper], 0.7,{x:"+=880", ease:Elastic.easeOut.config(0.65, 0.45), onComplete:function(){characterAnimation();}});
+        currentCarNumber -=1;
 
-function checkAnswer(e){
-
-     var combinedTargets = e.target.className + "_" +e.path[2].id;
-
-     switch(combinedTargets) {
-        case "answer1Phone_phone1":
-            $(".phoneAnswerScreen")[0].style.display = "none";
-        break;
-        case "answer2Phone_phone1":
-            player2Score += 10;
-            $(".phoneAnswerScreen")[0].style.display = "none";
-        break;
-        case "answer3Phone_phone1":
-            player3Score += 10;
-            $(".phoneAnswerScreen")[0].style.display = "none";
-        break;
-        case "answer4Phone_phone1":
-            player4Score += 10;
-            $(".phoneAnswerScreen")[0].style.display = "none";
-        break;
-        case "answer5Phone_phone1":
-            player1Score += 20;
-            $(".phoneAnswerScreen")[0].style.display = "none";
-        break;
-
-        case "answer1Phone_phone2":
-            player1Score += 10;
-            $(".phoneAnswerScreen")[1].style.display = "none";
-        break;
-        case "answer2Phone_phone2":
-            $(".phoneAnswerScreen")[1].style.display = "none";
-        break;
-        case "answer3Phone_phone2":
-            player3Score += 10;
-            $(".phoneAnswerScreen")[1].style.display = "none";
-        break;
-        case "answer4Phone_phone2":
-            player4Score += 10;
-            $(".phoneAnswerScreen")[1].style.display = "none";
-        break;
-        case "answer5Phone_phone2":
-            player2Score += 20;
-            $(".phoneAnswerScreen")[1].style.display = "none";
-        break;
-
-        case "answer1Phone_phone3":
-            player1Score += 10;
-            $(".phoneAnswerScreen")[2].style.display = "none";
-        break;
-        case "answer2Phone_phone3":
-            player2Score += 10;
-            $(".phoneAnswerScreen")[2].style.display = "none";
-        break;
-        case "answer3Phone_phone3":
-            $(".phoneAnswerScreen")[2].style.display = "none";
-        break;
-        case "answer4Phone_phone3":
-            player4Score += 10;
-            $(".phoneAnswerScreen")[2].style.display = "none";
-        break;
-        case "answer5Phone_phone3":
-            player3Score += 20;
-            $(".phoneAnswerScreen")[2].style.display = "none";
-        break;
-
-        case "answer1Phone_phone4":
-            player1Score += 10;
-            $(".phoneAnswerScreen")[3].style.display = "none";
-        break;
-        case "answer2Phone_phone4":
-            player2Score += 10;
-            $(".phoneAnswerScreen")[3].style.display = "none";
-        break;
-        case "answer3Phone_phone4":
-            player3Score += 10;
-            $(".phoneAnswerScreen")[3].style.display = "none";
-        break;
-        case "answer4Phone_phone4":
-            $(".phoneAnswerScreen")[3].style.display = "none";
-        break;
-        case "answer5Phone_phone4":
-            player4Score += 20;
-            $(".phoneAnswerScreen")[3].style.display = "none";
-        break;
-     }
-
-     answersGiven += 1;
-
-    if(answersGiven == activePhones){
-        showResult();
-        answersGiven = 0;
-    }
-    
-    scorePlayer1.innerHTML = name1.innerHTML + " : " + player1Score;
-    scorePlayer2.innerHTML = name2.innerHTML + " : " + player2Score;
-    scorePlayer3.innerHTML = name3.innerHTML + " : " + player3Score;
-    scorePlayer4.innerHTML = name4.innerHTML + " : " + player4Score;
-
-}
-
-function showResult(){
-    answerScreen.style.display = "none";
-    scoreScreen.style.display = "block";
-}
-
-function setNewQuestion(){
-    chooseCat.style.display = "none"
-    startScreen.style.display = "none"
-    scoreScreen.style.display = "none"
-    questionScreen.style.display = "block"
-
-    if(currentNumber < 10){
-
-        if(questionsAnswersArray[currentNumber].type == "audio"){
-            var myAudio = document.createElement('audio');
-            myAudio.id = 'questionSource';
-            myAudio.controls = true;
-            myAudio.autoplay = true;
-            document.getElementById('questionScreen').appendChild(myAudio);
-
-            var mySource = document.createElement('source');
-            mySource.src = questionsAnswersArray[currentNumber].source;
-            mySource.type = "audio/mpeg";
-            document.getElementById('questionSource').appendChild(mySource);
-            
-            var myText = document.createElement('div');
-            myText.id = 'questionSourceText';
-            myText.innerHTML = questionsAnswersArray[currentNumber].question;
-            document.getElementById('questionScreen').appendChild(myText);
-        }
-        else if(questionsAnswersArray[currentNumber].type == "video"){
-            var myVideo = document.createElement('video');
-            myVideo.id = 'questionSource';
-            myVideo.controls = true;
-            myVideo.autoplay = true;
-            document.getElementById('questionScreen').appendChild(myVideo);
-
-            var mySource = document.createElement('source');
-            mySource.src = questionsAnswersArray[currentNumber].source;
-            mySource.type = "video/mp4";
-            document.getElementById('questionSource').appendChild(mySource);
-            
-            var myText = document.createElement('div');
-            myText.id = 'questionSourceText';
-            myText.innerHTML = questionsAnswersArray[currentNumber].question;
-            document.getElementById('questionScreen').appendChild(myText);
-        }
-        else if(questionsAnswersArray[currentNumber].type == "image"){
-            var myImage = document.createElement('img');
-            myImage.id = 'questionSource';
-            myImage.src = questionsAnswersArray[currentNumber].source;
-            document.getElementById('questionScreen').appendChild(myImage);
-            
-            var myText = document.createElement('div');
-            myText.id = 'questionSourceText';
-            myText.innerHTML = questionsAnswersArray[currentNumber].question;
-            document.getElementById('questionScreen').appendChild(myText);
+        if (currentCarNumber == 0) {
+            TweenMax.set(arrowLeft, {display:"none"})
         }
         else{
-            var myText = document.createElement('div');
-            myText.id = 'questionSourceText';
-            myText.innerHTML = questionsAnswersArray[currentNumber].question;
-            document.getElementById('questionScreen').appendChild(myText);
-        }
-
-        for (var i = 0; i <= phoneArray.length; i++) {
-            if(window["phone" + (i+1) + "Active"] == false){
-                $(".phoneIntro")[i].style.display = "none";
-            }
-            else{
-                $(".phoneQuestionScreen")[i].style.display = "block";
-            }
-        }
-    }
-    else{
-        alert("Game is done!!!!!!!!")
-        questionScreen.style.display = "none";
-        chooseCat.style.display = "none";
-        startScreen.style.display = "block";
-        setVars();
-        for (var i = 0; i <= phoneArray.length; i++) {
-            $(".phoneIntro")[i].style.display = "block";
+            TweenMax.set(arrowRight, {display:"block"})
         }
     }
 }
 
+function navRigthClick(){
+    if(mobileClickAllowed){
+        mobileClickAllowed = false;
+        stopCharacterAnimation();
+        TweenMax.to([allChars, deskWrapper], 0.7,{x:"-=880", ease:Elastic.easeOut.config(0.65, 0.45), onComplete:function(){characterAnimation();}});
+        currentCarNumber +=1;
+
+        if (currentCarNumber == currentCharacter.length-1) {
+            TweenMax.set(arrowRight, {display:"none"})
+        }
+        else{
+            TweenMax.set(arrowLeft, {display:"block"})
+        } 
+    }
+}
+
+function characterAnimation(){
+    mobileClickAllowed = true;
+    var animationNumber = getRandom(1, 4);
+    this.characterAnimationCelebrationTL = this["createCelebration"+ animationNumber + "Tl"]();
+}
+
+function stopCharacterAnimation(){
+    this.characterAnimationCelebrationTL.progress(0).pause();
+    TweenMax.set([$(".characterWrapper"), $(".headWrapper"), $(".rightArmWrapper"), $(".rightLowerArm"), $(".leftArmWrapper"), $(".leftLowerArm")], {clearProps: "all"});
+}
+
+function createCelebration1Tl(char){
+    var tl = new TimelineMax({repeat:1, yoyo:true});
+        tl.add("start")
+
+        .to($(".characterWrapper"), 0.52,{y:-20, ease:Power1.easeInOut, repeat:4, yoyo:true}, "start")
+        .fromTo($(".characterWrapper"),0.9,{x:10},{x:-10, ease:Power1.easeInOut, repeat:2, yoyo:true}, "start")
+        .to($(".headWrapper"), 0.4,{y:-3, x:-3, ease:Power1.easeInOut, repeat:4, yoyo:true}, "start")
+    
+        .to($(".rightArmWrapper"), 1,{rotation:-100, ease:Power1.easeInOut}, "start")
+        .to($(".rightLowerArm"), 1,{rotation:-120, y:0, x: 0, ease:Power1.easeInOut}, "start+=0.5")
+        .to($(".rightLowerArm"), 1,{rotation:-70, y:0, x: 0, ease:Power1.easeInOut}, "start+=1.7")
+
+        .to($(".leftArmWrapper"), 1,{rotation:100, ease:Power1.easeInOut}, "start")
+        .to($(".leftLowerArm"), 1,{rotation:120, y:0, x: 0, ease:Power1.easeInOut}, "start+=0.5")
+        .to($(".leftLowerArm"), 1,{rotation:70, y:0, x: 0, ease:Power1.easeInOut}, "start+=1.7")
+        return tl;
+}
+
+function createCelebration2Tl(char){
+    var tl = new TimelineMax({repeat:0, yoyo:true});
+        tl.add("start")
+    
+        .to($(".rightArmWrapper"), 1,{rotation:-80, ease:Power1.easeInOut}, "start")
+        .to($(".rightArmWrapper"), 1,{zIndex:1, ease:Power1.easeInOut}, "start+=0.3")
+        .to($(".rightLowerArm"), 1,{rotation:-120, ease:Power1.easeInOut}, "start+=0.5")
+        .to($(".rightArmWrapper"), 0.5,{rotationX:180, ease:Power1.easeInOut}, "start+=1")
+        .to($(".rightArmWrapper"), 0.5,{rotation:-70, ease:Power1.easeInOut}, "start+=1")
+        .to($(".rightLowerArm"), 0.6,{rotation:-0, ease:Power1.easeInOut}, "start+=1.5")
+        .to($(".leftArmWrapper"), 0.6,{rotation:120, ease:Power1.easeInOut}, "start+=1.5")
+        .to($(".characterWrapper"), 0.6,{rotation:-10, ease:Power1.easeInOut}, "start+=1.5")
+
+        .to($(".rightLowerArm"), 0.6,{rotation:-360, ease:Power1.easeInOut}, "start+=2.5")
+        .to($(".leftLowerArm"), 0.6,{rotation:360, ease:Power1.easeInOut}, "start+=2.5")
+        .to($(".rightArmWrapper"), 0.5,{rotationX:180, rotation: 70, zIndex:0, ease:Power1.easeInOut}, "start+=3.5")
+        .to($(".characterWrapper"), 0.6,{rotation:10, ease:Power1.easeInOut}, "start+=2.5")
+        
+        .to([$(".characterWrapper"), $(".rightArmWrapper"), $(".leftArmWrapper")], 0.6,{rotation:0, ease:Power1.easeInOut}, "start+=4")
+        .to($(".leftArmWrapper"), 0.6,{rotation:0, ease:Power1.easeInOut}, "start+=4")
+        .to($(".rightArmWrapper"), 0.6,{rotation:180, ease:Power1.easeInOut}, "start+=4")
+        .to($(".rightArmWrapper"), 0,{rotationY:180, ease:Power1.easeInOut},  "start+=3.5")
+
+        return tl;
+}
+
+function createCelebration3Tl(char){
+    var tl = new TimelineMax({repeat:0, yoyo:true});
+        tl.add("start")
+    
+        .to($(".rightArmWrapper"), 1,{rotation:-90, ease:Power1.easeOut}, "start")
+        .to($(".leftArmWrapper"), 1,{rotation:90, ease:Power1.easeOut}, "start")
+        .to($(".leftArmWrapper"), 1,{rotation:100, ease:Power0.easeOut}, "start+=1")
+        .to($(".rightArmWrapper"), 1,{rotation:-100, ease:Power0.easeOut}, "start+=1")
+        .to($(".leftLowerArm"), 0.3,{rotation:-50, ease:Power0.easeOut}, "start+=1.0")
+        .to($(".characterWrapper"), 0.3,{rotation:-10, ease:Power0.easeOut}, "start+=1.0")
+        .to($(".headWrapper"), 0.3,{rotation:10, ease:Power0.easeOut}, "start+=1.0")
+        .to($(".leftLowerArm"), 0.3,{rotation:50, ease:Power0.easeOut}, "start+=1.2")
+        .to($(".leftArmWrapper"), 0.3,{rotation:80, ease:Power0.easeOut}, "start+=1.2")
+        .to($(".leftLowerArm"), 0.3,{rotation:70, ease:Power0.easeOut}, "start+=1.5")
+        .to($(".leftArmWrapper"), 0.3,{rotation:130, ease:Power0.easeOut}, "start+=1.6")
+        .to($(".characterWrapper"), 0.3,{rotation:0, ease:Power0.easeOut}, "start+=1.6")
+        .to($(".headWrapper"), 0.3,{rotation:0, ease:Power0.easeOut}, "start+=1.6")
+        .to($(".leftArmWrapper"), 0.3,{rotation:90, ease:Power0.easeOut}, "start+=2.1")
+        .to($(".leftLowerArm"), 0.3,{rotation:0, ease:Power0.easeOut}, "start+=1.9")
+        .to($(".leftLowerArm"), 1,{rotation:-30, ease:Power0.easeOut}, "start+=2.2")
+        .to($(".characterWrapper"), 0.3,{rotation:10, ease:Power0.easeOut}, "start+=1.9")
+        .to($(".headWrapper"), 0.3,{rotation:-10, ease:Power0.easeOut}, "start+=2.0")
+
+        .to($(".rightArmWrapper"), 1,{rotation:-120, ease:Power0.easeOut}, "start+=2.1")
+        .to($(".rightLowerArm"), 0.3,{rotation:30, ease:Power0.easeOut}, "start+=2.1")
+        .to($(".rightLowerArm"), 0.3,{rotation:-30, ease:Power0.easeOut}, "start+=2.3")
+        .to($(".rightArmWrapper"), 1,{rotation:-90, ease:Power0.easeOut}, "start+=2.4")
+
+        .to($(".rightLowerArm"), 0.3,{rotation:10, ease:Power0.easeOut}, "start+=2.8")
+        .to($(".characterWrapper"), 0.3,{rotation:0, ease:Power0.easeOut}, "start+=3.3")
+        .to($(".headWrapper"), 0.3,{rotation:0, ease:Power0.easeOut}, "start+=3.3")
+        .to($(".leftArmWrapper"), 0.3,{rotation:0, ease:Power0.easeOut}, "start+=3.3")
+        .to($(".rightArmWrapper"), 0.3,{rotation:0, ease:Power0.easeOut}, "start+=3.3")
+        return tl;
+}
 
 function getRandom(min, max) {
     min = Math.ceil(min);
@@ -433,110 +251,197 @@ function getRandom(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function showHide(className ,displayState){
-    var elements = document.querySelectorAll(className)
-
-    for (var i = 0; i < elements.length; i++){
-        if(window["phone" + (i+1) + "Active"] == true){
-            elements[i].style.display = displayState;
-        }
-    }
-}
-
-
-//SERVER
-var socket = io();
-
-if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-    console.log("USERAGENT = MOBILE");
-    $("#createGameBtn").hide();
-    $("#startGameBtn").hide();
-    $("#totalPlayers").hide(); 
-    $(".phones").hide();  
-}else{
-    // $("#startGameBtn").hide();
-    $(".phones").hide();
-    $("#mobileStartScreen").hide();
-    console.log("USERAGENT = PC");
-    var room = createGameId();
-
-    socket.on('connect', function() {
-        console.log("CONNECTED")
-        socket.emit('createRoom', room);
-    });
-
-    socket.on('disconnect', function () {
-        console.log("DISCONNECTED")
-    })  
-
-    $("#roomID").html(room);
-}
 
 
 
-   
-socket.on('updatePlayers', function(data){
-    console.log("PLAYER POSITION FUNCTION CALLED PLAYER COUNT = " + data["playerCount"])
-    switch(data["playerCount"]){
-        case 1:
-            console.log("PLAYER 1 JOINED");
-            phone1Name.innerHTML = data["playerName"];
-            $("#phone1").show();
-        break;
-        case 2:
-            console.log("PLAYER 2 JOINED");
-            phone2Name.innerHTML = data["playerName"];
-            $("#phone2").show();
-        break;
-        case 3:
-            console.log("PLAYER 3 JOINED");
-            phone3Name.innerHTML = data["playerName"];
-            $("#phone3").show();
-        break;
-        case 4:
-            console.log("PLAYER 4 JOINED");
-            phone4Name.innerHTML = data["playerName"];
-            $("#phone4").show();
-        break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+socket.on('sendRoom', function(data){
+    var host = data["host"];
+    var room = data["room"];
+
+    $("#roomID").html(room);  
+    console.log(room);
+});
+
+socket.on('fillCharacters', function(data){
+    console.log("FILL CHARACTERS " + data.length);
+    for(var i = 0; i < data.length; i++){
+        $("#character").append("<img class='characters' src='../img/characters/" + data[i] + "'>");
     }
 })
 
-socket.on('placeCreatedCharacter', function(obj){
-    console.log("PLACE CREATED CHARACTER")
-    $("#startGameBtn").show();
-})
-
-
-function joinGameRoom(){    
-    var room = document.getElementById('joinRoomId').value;
-    var playerName = document.getElementById('playerName').value;
-
-   socket.emit('joinRoom', {
-        roomID: room,
-        playerName: playerName
-    });
-
-	socket.on('disconnect', function () {
-		console.log("Disconnected from server")
-	});
-
-    $("#mobileStartScreen").hide();
-    $("#createCharacterScreen").show();
+//JOIN GAME
+function titleJoinGame(){
+    $("#hscreenTitle").hide();
+    $("#player").show();
+    $("#plscreenLogin").show();
 }
 
+function joinGame(){
+    joinGameAnimation();
 
-function createCharacter(headID, bodyID){
-    $("#createCharacterScreen").hide();
+    var room = document.getElementById('inputRoomId').value;
+    var name = document.getElementById('inputName').value;
 
-    socket.emit('createCharacter', {
-        headID: headID,
-        bodyID: bodyID
+    socket.emit('playerJoinGame', {
+        room,
+        name
     });
     
-
+    $("#plscreenCharacterCreation").append("<div>"+name+"</div>");
 }
 
-function createGameId(){
-    roomID = Math.floor(1000 + Math.random() * 9000);
-    return roomID;
-};
+socket.on('hostPlayerReadyUpdate', function(data){
+    console.log("hostPlayerReadyUpdate");
+    $("#btnStartGame").show(); 
+    if(data.length < 2){
+        $("#btnStartGame").hide();
+    }
+    for(i = 0; i < data.length; i++){
+        if(data[i].ready == false){
+            $("#btnStartGame").hide();
+        }
+    }
+});
+
+socket.on('hostJoinPlayerUpdate', function(data){
+    $("#players").append("<div name='" + data[data.length - 1].name + "'>" + data[data.length - 1].name + "</div>");
+});
+
+socket.on('hostDisconnectPlayerUpdate', function(data){
+    var childrenArray = $("#players").children().toArray();
+
+    for(i = 0; i < childrenArray.length; i++){
+        if(data == $(childrenArray[i]).attr("name")){
+            childrenArray[i].remove();
+        }
+    }
+});
+
+socket.on('playerUpdate', function(data){
+    $("#plscreenLogin").hide();
+    $("#plscreenCharacterCreation").show();
+});
+
+socket.on('roomError', function(data) {
+    $("#roomError").html("ERROR!! Room " + data.room + " doesn't exist!");
+    $("#roomError").show();
+    $("#plscreenLogin").show();
+    $("#plscreenCharacterCreation").hide();
+});
+
+socket.on('connect', function() {
+    console.log("CONNECTED")
+});
+
+socket.on('disconnect', function() {
+    console.log("DISCONNECTED")
+});
+
+socket.on('setReadyPlayer', function(data){
+    $("#players").children('div').each(function(){
+        if(this.innerHTML == data){
+            this.innerHTML = this.innerHTML + " READY!";
+        }
+
+    $("#plscreenWait").show();
+    
+    console.log($("#players").length);
+    // for(var i = 0; i < $("#players").length; i++ ){
+
+    // }
+
+})})
+
+socket.on('receiveHostID', function(data){
+    console.log("RECEIVED HOST ID");
+    console.log(data.hostID);
+    hostID = data.hostID;
+})
+
+
+socket.on('enableStartGame', function(data){
+    $("#btnStartGame").show();
+})
+
+function createCharacter(){    
+    $("#plscreenCharacterCreation").hide();
+
+    socket.emit('createCharacter', {
+        headID: 0,
+        bodyID: 0
+    });
+}
+
+function rightArrowClick(){
+    var current = "god" + this.slideShowing;
+
+    if (this.slideShowing >= this.numberofCharacters) {
+        this.slideShowing = 0;
+    }
+
+    var next = "god" + (this.slideShowing + 1);
+    var currentDiv = document.getElementById(current);
+    var nextDiv = document.getElementById(next);
+    var character = nextDiv.getElementsByClassName("character");
+
+    TweenMax.fromTo(currentDiv, this.bgTime, { x: 0 }, { x: -this.bannerWidth, ease: this.easeBg })
+    TweenMax.fromTo(nextDiv, this.bgTime, { x: this.bannerWidth }, { x: 0, ease: this.easeBg })
+    TweenMax.fromTo(character, this.charTime, { x: this.bannerWidth/4, opacity: 0}, { x: 0, opacity: 1, ease: Power4.easeOut, delay: 0.2 })
+
+    this.slideShowing++;
+}
+
+function leftArrowClick(){
+    var current = "god" + this.slideShowing;
+
+    if (this.slideShowing <= 1) {
+        this.slideShowing = 6;
+    }
+
+    var previous = "god" + (this.slideShowing - 1);
+    var currentDiv = document.getElementById(current);
+    var previousDiv = document.getElementById(previous);
+    var character = previousDiv.getElementsByClassName("character");
+
+    TweenMax.fromTo(currentDiv, this.bgTime, { x: 0 }, { x: this.bannerWidth, ease: this.easeBg })
+    TweenMax.fromTo(previousDiv, this.bgTime, { x: -this.bannerWidth }, { x: 0, ease: this.easeBg })
+    TweenMax.fromTo(character, this.charTime, { x: -this.bannerWidth/4, opacity: 0}, { x: 0, opacity: 1, ease: Power4.easeOut, delay: 0.2 })
+
+    this.slideShowing--;
+}
+
