@@ -1,5 +1,7 @@
 html {
 	box-sizing: border-box;
+    width:100%;
+    height:100%
 }
 *, *:before, *:after {
 	box-sizing: inherit;
@@ -8,6 +10,8 @@ body {
 	background-color: #FFF;
 	margin: 0;
 	padding: 0;
+    width:100%;
+    height:100%;
 }
 
 .hide {
@@ -22,331 +26,73 @@ body {
 }
 
 div, input, span, audio, video, img, h1{
-    position: absolute;
+    position: relative;
 }
 
-h1{
-    width: 100%;
-    white-space: nowrap;
-}
 /* Banner Styles */
-#game{
-    width: 100%;
-    height: 100%;
-    font-family: 'Passion One', cursive;
-    background: url('../img/background.jpg');
-    background-size: auto 100%;
-    background-repeat: repeat-x;
-    background-position: left top;
-    color: #fff;
-    overflow: hidden;
-
-    #startScreen{
-        width: 100%;
-        height: 100%;
-
-
-        #startGameBtn{
-            top: 200px;
-            left: 390px;
-            width: 100px;
-            height: 50px;
-            background-color: green;
-            color: #fff;
-            pointer: cursor;
-        }
-
-        #name1{
-            top: 149px;
-            left: 284px;
-        }
-
-        #name2{
-            top: 286px;
-            left: 78px;
-        }
-
-        #name3{
-            top: 189px;
-            left: 36px;
-        }
-
-        #name4{
-            top: 235px;
-            left: 219px;
-        }
-
-        #totalPlayers{
-            left: 310px;
-            top: 320px;
-            font-size: 20px;
-        }
-    }
-
-    #chooseCat{
-        width: 100%;
-        height: 100%;
-        display: none;
-
-        .category{
-            position: relative;
-            top: 250px;
-            left: 50%;
-            transform: translate(-50%);
-            width: 200px;
-            background-color: #ff0000;
-            margin: 10px 0px;
-            cursor: pointer;
-            text-align: center;
-            border: 2px dotted #ddc945;
-            padding: 5px;
-        }
-
-        .category:hover{
-            color: #fff;
-        }
-
-        h1{
-            color: #ff0000;
-            top: 160px;
-            left: 0px;
-            text-align: center;
-        }
-
-    }
-
-    #questionScreen{
-        display: none;
-        width: 100%;
-        height: 100%;
-
-
-            #questionSource{
-                top: 50px;
-                left: 10px;
-            }
-            img#questionSource{
-                max-height: 200px; 
-            }
-
-            #questionSourceText{
-                top: 10px;
-                left: 10px;
-                width: 100%;
-            }
-    }
-
-    #answerScreen{
-        display: none;
-        width: 100%;
-        height: 100%;
-
-        #answer1,
-        #answer2,
-        #answer3,
-        #answer4,
-        #answer5{
-            position: relative;
-            left: 50px;
-            top: 50px;
-            margin: 20px 0px;
-            text-transform: uppercase;
-        }
-    }
-
-    #scoreScreen{
-        width: 100%;
-        height: 100%;
-        display: none;
-
-        #scorePlayer1,
-        #scorePlayer2,
-        #scorePlayer3,
-        #scorePlayer4{
-            position: relative;
-            top: 10px;
-            left: 10px;
-            display: none;
-        }
-
-        #nextQuestion{
-            top: 200px;
-            left: 390px;
-            width: 100px;
-            height: 50px;
-            background-color: green;
-            color: #fff;
-        }
-    }
-    
-    #roofWrapper{
-        top: 75px;
-        left: 0px;
-        height: 50px;
-        width: 100%;
-        background: url(../img/roof_bars.png);
-        background-size: auto 100%;
-
-        #light1Wrapper{
-            top: -10px;
-            left: 70%;
-            transform: rotate(40deg);
-        }
-
-        #light2Wrapper{
-            top: 0px;
-            left: 30%;
-            transform: rotate(-40deg);
-        }
-
-        .lightWrapper{
-            width: 178px;
-            height: 306px;
-            transform: translate(-50%);
-            transform-origin: 20px 40px;
-
-            .light{
-                top: 0px;
-                left: 0px;
-            }
-
-            .lightColor{
-                top: 47px;
-                left: 9px;
-                opacity: 0;
-            }
-
-            .blue{
-                opacity: 0.5;
-            }
-        }
-    }
-
-    #logo{
-        left: 50%;
-        top: 30px;
-        transform: translate(-50%);
-        width: 250px;
-    }
-
-
+.screen{
+    width:100%;
+    height:100%;
 }
 
-#phone1,
-#phone2,
-#phone3,
-#phone4{
-    width: 150px;
-    height: 300px;
-    background-color: #000;
-    bottom: 0px;
-    color: #FFF;
-}
-
-#phone1{
-    left: 0px;
-
-    span{
-        top: 10px;
-        left: 10px;
-    }
-
-    #namePhone1{
-        top: 60px;
-        left: 10px;
-        width: 130px;
-    }
-}
-
-#phone2{
-    left: 200px;
-
-    span{
-        top: 10px;
-        left: 10px;
-    }
-
-    #namePhone2{
-        top: 60px;
-        left: 10px;
-        width: 130px;
-    }
-}
-
-#phone3{
-    left: 400px;
-
-    span{
-        top: 10px;
-        left: 10px;
-    }
-
-    #namePhone3{
-        top: 60px;
-        left: 10px;
-        width: 130px;
-    }
-}
-
-#phone4{
-    left: 600px;
-
-    span{
-        top: 10px;
-        left: 10px;
-    }
-
-    #namePhone4{
-        top: 60px;
-        left: 10px;
-        width: 130px;
-    }
-}
-
-.mobileSendBtn{
-    top: 150px;
-    left: 10px;
-    width: 130px;
-    height: 50px;
-    background-color: green;
+.btn{
     cursor: pointer;
 }
 
-.waitText{
-    left: 55px;
-    top: 180px;
+.arrowGraphic{
+    -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    background-color:#000;
+    height:100%;
+    width:100%;
 }
 
-.phoneQuestionScreen{
+#player{
     width: 100%;
-    height: 100%;
-    background-color: orange;
-    color: #000;
-    font-size: 18px;
-    display: none;
+    height:100%;
 }
 
-.phoneAnswerScreen{
-    display: none;
-    width: 100%;
-    height: 100%;
-    background-color: red;
-    
-    .answer1Phone,
-    .answer2Phone,
-    .answer3Phone,
-    .answer4Phone,
-    .answer5Phone{
-        position: relative;
-        left: 10px; 
-        margin: 10px 0px 10px 0px;
-        cursor: pointer;
-        text-transform: uppercase;
-    }
+#CCBody{
+    width:100%;
+    height:100%;
 }
 
-.answerPhone{
-    top: 100px;
-    left: 10px;
-    width: 130px;
+#CCarrowLeft{
+    position: absolute;
+    width:80px;
+    height: 30px;
+    top:50%;
+    left:0;
+}
+
+.CCarrows{
+    position: absolute;
+    width:80px;
+    height:80px;
+    top:50%;
+    -ms-transform: rotate(-90deg) translateY(-50%); /* IE 9 */
+    -webkit-transform: rotate(-90deg) translateY(-50%); /* Chrome, Safari, Opera */
+    transform:rotate(-90deg) translateY(-50%);
+
+}
+
+#CCarrowRight{
+    position: absolute;
+    width:80px;
+    height: 30px;
+    top:50%;
+    right:0;
+    -ms-transform: rotate(90deg) translateY(-50%); /* IE 9 */
+    -webkit-transform: rotate(90deg) translateY(-50%); /* Chrome, Safari, Opera */
+    transform:rotate(90deg) translateY(-50%);
+}
+
+#character{
+    position: absolute;
+    top:50%;
+}
+
+.characters{
+    position: absolute;
+    padding: 0 500px;
 }

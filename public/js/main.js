@@ -56,8 +56,6 @@ function loadSportJson(){
 }
 
 function setVars(){
-    
-    
     activePhones = 0;
 
     phone1Active = false;
@@ -79,9 +77,9 @@ function setVars(){
 
     phoneArray = [phone1, phone2. phone3, phone4]
 
-    
     currentNumber = 0;
-    
+
+    $("#createCharacterScreen").hide();
 }
 
 
@@ -101,6 +99,9 @@ function setEventlisteners(){
     
     loadTvShows.addEventListener("click", loadTV);
     loadSport.addEventListener("click", loadSportJson);
+
+    document.getElementById("joinGameBtn").addEventListener("click", joinGameRoom);
+    document.getElementById("createCharacterBtn").addEventListener("click", createCharacter);
 }
 
 function setName(e, value){
@@ -108,22 +109,22 @@ function setName(e, value){
     case sendPhone1:
         name1.innerHTML = value;
         phone1Active = true;
-        $(".phoneIntro")[0].style.display = "none";               
+        $(".phoneIntro")[0].style.display = "none";
         break;
     case sendPhone2:
         name2.innerHTML = value;
         phone2Active = true;
-        $(".phoneIntro")[1].style.display = "none";                
+        $(".phoneIntro")[1].style.display = "none";
         break;
     case sendPhone3:
         name3.innerHTML = value;
         phone3Active = true;
-        $(".phoneIntro")[2].style.display = "none";               
+        $(".phoneIntro")[2].style.display = "none";
         break;
     case sendPhone4:
         name4.innerHTML = value;
         phone4Active = true;
-        $(".phoneIntro")[3].style.display = "none";              
+        $(".phoneIntro")[3].style.display = "none";
         break;
     }
 
@@ -443,3 +444,99 @@ function showHide(className ,displayState){
 }
 
 
+//SERVER
+var socket = io();
+
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    console.log("USERAGENT = MOBILE");
+    $("#createGameBtn").hide();
+    $("#startGameBtn").hide();
+    $("#totalPlayers").hide(); 
+    $(".phones").hide();  
+}else{
+    // $("#startGameBtn").hide();
+    $(".phones").hide();
+    $("#mobileStartScreen").hide();
+    console.log("USERAGENT = PC");
+    var room = createGameId();
+
+    socket.on('connect', function() {
+        console.log("CONNECTED")
+        socket.emit('createRoom', room);
+    });
+
+    socket.on('disconnect', function () {
+        console.log("DISCONNECTED")
+    })  
+
+    $("#roomID").html(room);
+}
+
+
+
+   
+socket.on('updatePlayers', function(data){
+    console.log("PLAYER POSITION FUNCTION CALLED PLAYER COUNT = " + data["playerCount"])
+    switch(data["playerCount"]){
+        case 1:
+            console.log("PLAYER 1 JOINED");
+            phone1Name.innerHTML = data["playerName"];
+            $("#phone1").show();
+        break;
+        case 2:
+            console.log("PLAYER 2 JOINED");
+            phone2Name.innerHTML = data["playerName"];
+            $("#phone2").show();
+        break;
+        case 3:
+            console.log("PLAYER 3 JOINED");
+            phone3Name.innerHTML = data["playerName"];
+            $("#phone3").show();
+        break;
+        case 4:
+            console.log("PLAYER 4 JOINED");
+            phone4Name.innerHTML = data["playerName"];
+            $("#phone4").show();
+        break;
+    }
+})
+
+socket.on('placeCreatedCharacter', function(obj){
+    console.log("PLACE CREATED CHARACTER")
+    $("#startGameBtn").show();
+})
+
+
+function joinGameRoom(){    
+    var room = document.getElementById('joinRoomId').value;
+    var playerName = document.getElementById('playerName').value;
+
+   socket.emit('joinRoom', {
+        roomID: room,
+        playerName: playerName
+    });
+
+	socket.on('disconnect', function () {
+		console.log("Disconnected from server")
+	});
+
+    $("#mobileStartScreen").hide();
+    $("#createCharacterScreen").show();
+}
+
+
+function createCharacter(headID, bodyID){
+    $("#createCharacterScreen").hide();
+
+    socket.emit('createCharacter', {
+        headID: headID,
+        bodyID: bodyID
+    });
+    
+
+}
+
+function createGameId(){
+    roomID = Math.floor(1000 + Math.random() * 9000);
+    return roomID;
+};

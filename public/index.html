@@ -11,158 +11,89 @@
 </head>
 
 <body>
-	<div id="game">
-		
-		<div id="startScreen">
-			<h1>Welcome! Connect up to 4 devices.</h1>
-
-			<div id="name1"></div>
-			<div id="name2"></div>
-			<div id="name3"></div>
-			<div id="name4"></div>
-
-			<div id="totalPlayers">Total players = 0</div>
-
-			<div id="startGameBtn">START GAME</div>
+	<div id="hscreenTitle">
+		<div id="btnTitleCreateGame" class="btn">Create Game</div>
+		<div id="btnTitleJoinGame" class="btn">Join Game</div>
+	</div>
+	<div id="host">
+		<div id="roomID"></div>
+		<div id="hscreenLogin" class="screen">
+			Connect with your phones, up to 4 players.
+			<div id="players">
+				
+			</div>			
+			<div id="btnStartGame" class="btn">Start Game</div>
 		</div>
 
-		<div id="chooseCat">
-			<h1>Choose a category!</h1>
-			<div id="loadSport" class="category">Load sport questions</div>
-			<div id="loadTvShows" class="category">Load TV Show intro questions</div>
+		<div id="hscreenCategory" class="screen"></div>
+		<div id="hscreenQuestion" class="screen"></div>
+		<div id="hscreenAnswers" class="screen">
+			<div class="answerButton">1</div>
+			<div class="answerButton">2</div>
+			<div class="answerButton">3</div>
+			<div class="answerButton">4</div>
+			<div class="answerButton">5</div>
 		</div>
+		<div id="hscreenScore" class="screen"></div>
+	</div>
 
-		<div id="questionScreen"></div>
-
-		<div id="answerScreen">
-			<div id="answer1">1</div>
-			<div id="answer2">2</div>
-			<div id="answer3">3</div>
-			<div id="answer4">4</div>
-			<div id="answer5">5</div>
+	<div id="player">
+		<div id="plscreenLogin" class="screen">
+			<div class="labels">Name:</div>
+			<input id="inputName"></input>
+			<div class="labels">Room ID:</div>
+			<input id="inputRoomId"></input>
+			<div id="btnJoinGame" class="btn">Join Game</div>
+			<div id="roomError"></div>
 		</div>
-
-		<div id="scoreScreen">
-			<div id="scorePlayer1">0</div>
-			<div id="scorePlayer2">0</div>
-			<div id="scorePlayer3">0</div>
-			<div id="scorePlayer4">0</div>
-
-			<div id="nextQuestion">NEXT QUESTION</div>
-		</div>
-
-		<div id="roofWrapper">
-			<div id="light1Wrapper" class="lightWrapper">
-				<img src="img/light_green.png" class="lightColor green">
-				<img src="img/light_red.png" class="lightColor red">
-				<img src="img/light_yellow.png" class="lightColor yellow">
-				<img src="img/light_blue.png" class="lightColor blue">
-				<img src="img/light.png" class="light">
+		<div id="plscreenCharacterCreation" class="screen">			
+			<div id="CCBody">
+				<div id="CCarrowLeft" class="CCarrows"><div class="arrowGraphic"></div></div>
+				<div id="CCarrowRight" class="CCarrows"><div class="arrowGraphic"></div></div>
 			</div>
 
-			<div id="light2Wrapper" class="lightWrapper">
-				<img src="img/light_green.png" class="lightColor green">
-				<img src="img/light_red.png" class="lightColor red">
-				<img src="img/light_yellow.png" class="lightColor yellow">
-				<img src="img/light_blue.png" class="lightColor blue">
-				<img src="img/light.png" class="light">
-			</div>
+			<div id="character"></div>
 
-
+			<div id="btnCreateCharacter" class="btn">Create Character</div>
 		</div>
-		<img src="img/logo.png" id="logo">
-
-	</div>
-
-	<div id="phone1">
-		<span>Phone 1</span>
-		<div class="waitText">WAIT</div>
-		<div class="phoneIntro">
-			<input name="namePhone1" type="text" maxlength="512" id="namePhone1" value="player1" />
-			<div id="sendPhone1" class="mobileSendBtn">SEND</div>
+		<div id="plscreenYourAnswer" class="screen">
+			<div class="labels">Your Answer:</div>
+			<input id="inputAnswer"></input>
 		</div>
-		<div class="phoneQuestionScreen">
-			Put YOUR answer here:
-			<input name="answerPhone1" type="password" maxlength="512" id="answerPhone1" class="answerPhone" value="1111111" />
-			<div id="sendAnswerPhone1" class="mobileSendBtn">SEND</div>
+		<div id="plscreenAnswers" class="screen">
+			<div class="answerButton">1</div>
+			<div class="answerButton">2</div>
+			<div class="answerButton">3</div>
+			<div class="answerButton">4</div>
+			<div class="answerButton">5</div>
 		</div>
-		<div class="phoneAnswerScreen">
-			<div class="answer1Phone">Answer 1</div>
-			<div class="answer2Phone">Answer 2</div>
-			<div class="answer3Phone">Answer 3</div>
-			<div class="answer4Phone">Answer 4</div>
-			<div class="answer5Phone">Answer 5</div>
+		<div id="plscreenLikes" class="screen">
+			<div class="answerButton">1</div>
+			<div class="likeButton"></div>
+			<div class="hateButton"></div>
+			<div class="answerButton">2</div>
+			<div class="likeButton"></div>
+			<div class="hateButton"></div>
+			<div class="answerButton">3</div>
+			<div class="likeButton"></div>
+			<div class="hateButton"></div>
+			<div class="answerButton">4</div>
+			<div class="likeButton"></div>
+			<div class="hateButton"></div>
+			<div class="answerButton">5</div>
+			<div class="likeButton"></div>
+			<div class="hateButton"></div>
 		</div>
-	</div>
-	<div id="phone2">
-	<span>Phone 2</span>
-		<div class="waitText">WAIT</div>
-		<div class="phoneIntro">
-			<input name="namePhone2" type="text" maxlength="512" id="namePhone2" value="player2" />
-			<div id="sendPhone2" class="mobileSendBtn">SEND</div>
-		</div>
-		<div class="phoneQuestionScreen">
-			Put YOUR answer here:
-			<input name="answerPhone2" type="password" maxlength="512" id="answerPhone2" class="answerPhone" value="2222222" />
-			<div id="sendAnswerPhone2" class="mobileSendBtn">SEND</div>
-		</div>
-		<div class="phoneAnswerScreen">
-			<div class="answer1Phone">Answer 1</div>
-			<div class="answer2Phone">Answer 2</div>
-			<div class="answer3Phone">Answer 3</div>
-			<div class="answer4Phone">Answer 4</div>
-			<div class="answer5Phone">Answer 5</div>
-		</div>
-	</div>
-	<div id="phone3">
-	<span>Phone 3</span>
-		<div class="waitText">WAIT</div>
-		<div class="phoneIntro">
-			<input name="namePhone3" type="text" maxlength="512" id="namePhone3" value="player3" />
-			<div id="sendPhone3" class="mobileSendBtn">SEND</div>
-		</div>
-		<div class="phoneQuestionScreen">
-			Put YOUR answer here:
-			<input name="answerPhone3" type="password" maxlength="512" id="answerPhone3" class="answerPhone" value="3333333"/>
-			<div id="sendAnswerPhone3" class="mobileSendBtn">SEND</div>
-		</div>
-		<div class="phoneAnswerScreen">
-			<div class="answer1Phone">Answer 1</div>
-			<div class="answer2Phone">Answer 2</div>
-			<div class="answer3Phone">Answer 3</div>
-			<div class="answer4Phone">Answer 4</div>
-			<div class="answer5Phone">Answer 5</div>
-		</div>
-	</div>
-	<div id="phone4">
-	<span>Phone 4</span>
-		<div class="waitText">WAIT</div>
-		<div class="phoneIntro">
-			<input name="namePhone4" type="text" maxlength="512" id="namePhone4" value="player4" />
-			<div id="sendPhone4" class="mobileSendBtn">SEND</div>
-		</div>
-		<div class="phoneQuestionScreen">
-			Put YOUR answer here:
-			<input name="answerPhone4" type="password" maxlength="512" id="answerPhone4" class="answerPhone" value="444444444" />
-			<div id="sendAnswerPhone4" class="mobileSendBtn">SEND</div>
-		</div>
-		<div class="phoneAnswerScreen">
-			<div class="answer1Phone">Answer 1</div>
-			<div class="answer2Phone">Answer 2</div>
-			<div class="answer3Phone">Answer 3</div>
-			<div class="answer4Phone">Answer 4</div>
-			<div class="answer5Phone">Answer 5</div>
-		</div>
-	</div>
-
+		<div id="plscreenWait" class="screen">Waiting for other players.</div>
 	</div>
 
 	<script src="https://s0.2mdn.net/ads/studio/cached_libs/tweenmax_1.18.5_23b0de6da0ee295131e32a500470610c_min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 
+    <script src="/socket.io/socket.io.js"></script>    
 	<!-- build:js js/Temple.min.js -->
-	<script src="js/main.js"></script>
+	<script src="js/main2.js"></script>
 	<!-- /build -->
-	<script src="js/bundle.js"></script>
-            
+	<!--<script src="js/bundle.js"></script>-->
 </body>
 </html>
