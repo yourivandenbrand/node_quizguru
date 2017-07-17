@@ -3,15 +3,36 @@ function shuffle(o){for(var j, x, i = o.length; i; j = Math.floor(Math.random() 
 
 var socket = io();
 
+currentCharacter = ['Indian', "Sumo", "Mime", "Ajax", "Psv", "Feyenoord"];
+
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    titleJoinGame();
+}else{
+    createGame();
+    $("#player").hide();
+}
+
+window.addEventListener("orientationchange", function(){
+
+        TweenMax.set(blackOverlay, {display:"block"})
+
+         window.setTimeout(function() {
+            checkSize();
+        }, 1000);
+
+    }, false);
+
+
 checkSize();
+
 
 //SERVER
 $(".screen").hide();
-$("#host").hide();
-$("#player").hide();
 $("#roomError").hide();
 $("#btnStartGame").hide();
 $("#mobileCharacterScreen").hide();
+$("#mobileWaitingScreen").hide();
+$("#createGameBtn").hide();
 
 
 
@@ -20,16 +41,14 @@ $("#btnJoinGame").click(joinGame);
 $("#btnTitleCreateGame").click(createGame);
 $("#btnTitleStartGame").click(startGame);
 $("#btnTitleJoinGame").click(titleJoinGame);
-$("#btnCreateCharacter").click(createCharacter);
-$("#btnCreateCharacter").click(createCharacter);
+$("#btnCreateCharacter").click(setupCharacter);
 
 // $(".CCarrowRight").addEventListener("click", this.rightArrowClick.bind(this));
 // $(".CCarrowLeft").addEventListener("click", this.leftArrowClick.bind(this));
 
 //CREATE GAME
 function createGame(){
-    $("#hscreenTitle").hide();
-    $("#host").show();
+    $("#game").show();
     $("#hscreenLogin").show();
     socket.emit('createGame');
 }
@@ -39,16 +58,40 @@ function startGame(){
     
 }
 
+function getOrientation(){
+    var orientation = window.innerWidth > window.innerHeight ? "Landscape" : "Portrait";
+    return orientation;
+}
+
 function checkSize(){
-
-    var screenHeight = window.innerHeight;
     var screenWidth = window.innerWidth;
-    var gameHeight = playerScreen.offsetHeight; 
+    var screenHeight = window.innerHeight;
+    var minimum = Math.min(screenWidth, screenHeight);
+    
 
+    if (getOrientation() == "Landscape") {
+        var ratio = minimum/playerScreen.offsetWidth;
+        TweenMax.set(rotatePhoneScreen, {scale:ratio, transformOrigin: "0px 0px"})
+        TweenMax.fromTo(rotatePhone, 3, {rotation:-90, x:350}, {rotation:0, x:0, repeat:-1, yoyo:false, repeatDelay: 1, transformOrigin: "0% 100%", ease:Power1.easeInOut})
+        TweenMax.set(rotatePhoneScreenWrapper, {display:"block"})
+        $("#playerScreenWrapper").hide();
+    } 
+
+    else {
+        $("#playerScreenWrapper").show();
+        var ratio = minimum/playerScreen.offsetHeight;
+        TweenMax.set(rotatePhoneScreen, {scale:ratio, transformOrigin: "0px 0px"})
+        TweenMax.killAll();
+        TweenMax.set(rotatePhoneScreenWrapper, {display:"none"})
+
+    }
+    
+    var gameHeight = playerScreen.offsetHeight; 
     var totalScreen = screenHeight/gameHeight;
 
     TweenMax.set(playerScreen, {scale:totalScreen, transformOrigin: "0px 0px"})
     TweenMax.set(playerScreenWrapper, {height:playerScreen.offsetHeight*totalScreen, width:playerScreen.offsetWidth*totalScreen})
+    TweenMax.set(rotatePhoneScreenWrapper, {width:rotatePhoneScreen.getBoundingClientRect().width})
     TweenMax.set(blackOverlay, {display:"none"})
 }
 
@@ -63,9 +106,8 @@ function characterSetup(){
     arrowLeft.addEventListener("click", navLeftClick);
     arrowRight.addEventListener("click", navRigthClick);
 
-    currentCharacter = ['Indian', "Sumo", "Mime"];
     mobileClickAllowed = true;
-    currentCarNumber = 0;
+    currentCharNumber = 0;
 
     TweenMax.set([allChars, deskWrapper], {width: currentCharacter.length*900})
     TweenMax.set(arrowLeft, {display:"none"})
@@ -127,9 +169,9 @@ function navLeftClick(){
         mobileClickAllowed = false;
         stopCharacterAnimation();
         TweenMax.to([allChars, deskWrapper], 0.7,{x:"+=880", ease:Elastic.easeOut.config(0.65, 0.45), onComplete:function(){characterAnimation();}});
-        currentCarNumber -=1;
+        currentCharNumber -=1;
 
-        if (currentCarNumber == 0) {
+        if (currentCharNumber == 0) {
             TweenMax.set(arrowLeft, {display:"none"})
         }
         else{
@@ -143,9 +185,9 @@ function navRigthClick(){
         mobileClickAllowed = false;
         stopCharacterAnimation();
         TweenMax.to([allChars, deskWrapper], 0.7,{x:"-=880", ease:Elastic.easeOut.config(0.65, 0.45), onComplete:function(){characterAnimation();}});
-        currentCarNumber +=1;
+        currentCharNumber +=1;
 
-        if (currentCarNumber == currentCharacter.length-1) {
+        if (currentCharNumber == currentCharacter.length-1) {
             TweenMax.set(arrowRight, {display:"none"})
         }
         else{
@@ -251,69 +293,63 @@ function getRandom(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function getCookie(cname)  
+{
+    var name = cname + "=";
+    var ca = document.cookie.split( ';' );
+    for( var i = 0; i < ca.length; i++ ) 
+    {
+        var c = ca[ i ];
+        while ( c.charAt( 0 ) == ' ' ) c = c.substring( 1 );
+        if ( c.indexOf( name ) == 0 ) return c.substring( name.length,c.length );
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, exdays) 
+{
+    var d = new Date();
+    d.setTime( d.getTime() + ( exdays * 24 * 60 * 60 * 1000 ) );
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
 
 
 
+socket.on('startReconnectTimer', function(data){
+	console.log($( "#players:contains("+data+")" ));	
+
+    // $("#players").attr("name").append("jaaaaaaaaaaaa");    
+});
 
 
+if(document.cookie){
+	socket.emit('reconnect', document.cookie);
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+socket.on('storeCookie', function(data){
+    document.cookie = data;
+    console.log(document.cookie);
+});
 
 socket.on('sendRoom', function(data){
     var host = data["host"];
     var room = data["room"];
 
-    $("#roomID").html(room);  
+    $(".roomIdCopyTitle").html("ROOM ID:" + room);  
+    $(".roomIdCopy").html("Scan de QR code of ga naar <br>www.quizguru.nl/" + room);  
     console.log(room);
 });
 
-socket.on('fillCharacters', function(data){
-    console.log("FILL CHARACTERS " + data.length);
-    for(var i = 0; i < data.length; i++){
-        $("#character").append("<img class='characters' src='../img/characters/" + data[i] + "'>");
-    }
-})
 
 //JOIN GAME
 function titleJoinGame(){
-    $("#hscreenTitle").hide();
     $("#player").show();
     $("#plscreenLogin").show();
+    $("#game").hide();
 }
 
 function joinGame(){
-    joinGameAnimation();
-
     var room = document.getElementById('inputRoomId').value;
     var name = document.getElementById('inputName').value;
 
@@ -327,7 +363,7 @@ function joinGame(){
 
 socket.on('hostPlayerReadyUpdate', function(data){
     console.log("hostPlayerReadyUpdate");
-    $("#btnStartGame").show(); 
+    $("#btnStartGame").show();
     if(data.length < 2){
         $("#btnStartGame").hide();
     }
@@ -338,8 +374,25 @@ socket.on('hostPlayerReadyUpdate', function(data){
     }
 });
 
+socket.on('hostDisconnect', function(){
+	console.log("HOST DISCONNECTED");
+
+    $("#mobileIntroScreen").show();
+    $("#mobileCharacterScreen").hide();
+    $("#mobileWaitingScreen").hide();
+    $('#inputRoomId').val('')
+    $('#inputName').val('')
+    
+    $("#roomError").html("Host Disconnected");
+    $("#roomError").show();
+});
+
+
 socket.on('hostJoinPlayerUpdate', function(data){
-    $("#players").append("<div name='" + data[data.length - 1].name + "'>" + data[data.length - 1].name + "</div>");
+    console.log("PLAYER NAME = " + data.allPlayersInRoom[data.allPlayersInRoom.length - 1].name);
+    console.log("PLAYER NUMBER = " + data.playerNumberInRoom);
+    newPlayer(data.allPlayersInRoom[data.allPlayersInRoom.length - 1].name, data.playerNumberInRoom);
+    
 });
 
 socket.on('hostDisconnectPlayerUpdate', function(data){
@@ -350,22 +403,27 @@ socket.on('hostDisconnectPlayerUpdate', function(data){
             childrenArray[i].remove();
         }
     }
+    console.log("hostDisconnectPlayerUpdate " + data);
+    if(childrenArray.length < 3){
+        $("#btnStartGame").hide();
+    }
 });
 
 socket.on('playerUpdate', function(data){
-    $("#plscreenLogin").hide();
-    $("#plscreenCharacterCreation").show();
+    $("#mobileIntroScreen").hide();
+    $("#mobileCharacterScreen").show();
+    joinGameAnimation();
 });
 
 socket.on('roomError', function(data) {
-    $("#roomError").html("ERROR!! Room " + data.room + " doesn't exist!");
+    $("#roomError").html("Room " + data.room + " doesn't exist!");
     $("#roomError").show();
     $("#plscreenLogin").show();
     $("#plscreenCharacterCreation").hide();
 });
 
 socket.on('connect', function() {
-    console.log("CONNECTED")
+    console.log("CONNECTED");
 });
 
 socket.on('disconnect', function() {
@@ -398,13 +456,20 @@ socket.on('enableStartGame', function(data){
     $("#btnStartGame").show();
 })
 
-function createCharacter(){    
-    $("#plscreenCharacterCreation").hide();
+socket.on('fillCharacter', function(data){
+    // console.log("FILL CHARACTER FUNCTION DATA = " + charSelect);
+    createCharacter(currentCharacter[data.charSelect.currentCharNumber], data.playerNumberInRoom)
+})
 
-    socket.emit('createCharacter', {
-        headID: 0,
-        bodyID: 0
-    });
+
+
+
+function setupCharacter(){    
+    $("#mobileCharacterScreen").hide();
+    $("#mobileWaitingScreen").show();
+    animateDots();
+
+    socket.emit('setupCharacter', {currentCharNumber});
 }
 
 function rightArrowClick(){
@@ -445,3 +510,10 @@ function leftArrowClick(){
     this.slideShowing--;
 }
 
+function animateDots(){
+    var dotsTimeline = new TimelineMax({repeat:-1});
+        dotsTimeline.fromTo($(".dots")[0], 0.3, {opacity:0}, {opacity:1})
+        dotsTimeline.fromTo($(".dots")[1], 0.3, {opacity:0}, {opacity:1})
+        dotsTimeline.fromTo($(".dots")[2], 0.3, {opacity:0}, {opacity:1});
+        dotsTimeline.to([$(".dots")[0], $(".dots")[1], $(".dots")[2]], 0.3, {opacity:0});
+}

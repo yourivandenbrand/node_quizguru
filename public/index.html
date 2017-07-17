@@ -7,15 +7,85 @@
 	<title>Quiz Guru</title>
 
 	<link href="https://fonts.googleapis.com/css?family=Passion+One" rel="stylesheet">
+	<link rel="stylesheet" href="css/game.css" type="text/css">
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
 
 <body>
-	<div id="hscreenTitle">
-		<div id="btnTitleCreateGame" class="btn">Create Game</div>
-		<div id="btnTitleJoinGame" class="btn">Join Game</div>
-	</div>
 	<div id="host">
+		<div id="game">
+			<div id="roofWrapper">
+	<!-- 			<div id="light1Wrapper" class="lightWrapper">
+					<img src="img/light_green.png" class="lightColor green">
+					<img src="img/light_red.png" class="lightColor red">
+					<img src="img/light_yellow.png" class="lightColor yellow">
+					<img src="img/light_blue.png" class="lightColor blue">
+					<img src="img/light.png" class="light">
+				</div>
+
+				<div id="light2Wrapper" class="lightWrapper">
+					<img src="img/light_green.png" class="lightColor green">
+					<img src="img/light_red.png" class="lightColor red">
+					<img src="img/light_yellow.png" class="lightColor yellow">
+					<img src="img/light_blue.png" class="lightColor blue">
+					<img src="img/light.png" class="light">
+				</div> -->
+			</div>
+
+
+			<img src="img/tunnel.png" class="tunnel">
+			<img src="img/help_btn.png" class="helpBtn">
+
+			<div id="deskContainer">
+			</div>
+
+			<div class="QRcode">
+				<div class="QR">
+					<img src="img/fakeQR.png" class="QRimage">
+				</div>
+				<div class="phone">
+					<div class="phoneScan"></div>
+					<img src="img/phoneIcon.png" class="phoneIcon">
+				</div>
+				<div class="roomId">
+					<div class="roomIdCopyTitle">
+						Room ID:<span>2526</span>
+					</div>
+					<div class="roomIdCopy">
+						Scan de QR code of ga naar <br>www.quizguru.nl/<span>2526</span>
+					</div>
+				</div>
+			</div>
+
+			<div id="createGameBtn" class="btn startBtn ready">
+				<div class="btnCopy startBtnCopy">
+				Start Game
+				</div>
+			</div>
+
+			<div id="logoWrapper">
+				<img id="logoBackground"  src="img/logo/logoBG.png">
+				<div class="lightsWrapper"></div>
+				<img id="quizCopyBG"  src="img/logo/quizCopyBG.png">
+				<img id="quizCopyFG"  src="img/logo/quizCopyFG.png">
+				
+				<img id="subCircle" class="circle4"  src="img/logo/subCopyCircle3.png">
+				<img id="subCircle" class="circle1"  src="img/logo/subCopyCircle0.png">
+				<img id="subCircle" class="circle2"  src="img/logo/subCopyCircle1.png">
+				<img id="subCircle" class="circle3"  src="img/logo/subCopyCircle2.png">
+
+				<img id="subCopyGOut" class="subCopyOut"  src="img/logo/subCopyGout.png">
+				<img id="subCopyUOut" class="subCopyOut"  src="img/logo/subCopyUout.png">
+				<img id="subCopyROut" class="subCopyOut"  src="img/logo/subCopyRout.png">
+				<img id="subCopyU2Out" class="subCopyOut"  src="img/logo/subCopyUout.png">
+
+				<img id="subCopyG" class="subCopy"  src="img/logo/subCopyG.png">
+				<img id="subCopyU" class="subCopy"  src="img/logo/subCopyU.png">
+				<img id="subCopyR" class="subCopy"  src="img/logo/subCopyR.png">
+				<img id="subCopyU2" class="subCopy"  src="img/logo/subCopyU.png">
+			</div>
+
+		</div>
 		<div id="roomID"></div>
 		<div id="hscreenLogin" class="screen">
 			Connect with your phones, up to 4 players.
@@ -51,6 +121,7 @@
 					<input type="text" name="name" id="inputName">
 
 					<img id="btnJoinGame" class="btn" src="img/mobile/next_btn.png">
+					<div id="roomError"></div>
 				</div>
 
 				<div id="mobileCharacterScreen">
@@ -64,16 +135,32 @@
 					<img id="arrowRight" src="img/mobile/arrow_rigth.png">
 
 				</div>
+
+				<div id="mobileWaitingScreen">
+					<div id="messageCopy">WACHTEN OP <BR> ANDERE SPELERS<span class="dots">.</span><span class="dots">.</span><span class="dots">.</span></div>
+				</div>
+
+				
 				
 				<img src="img/mobile/logo.png" id="logo">
 			</div>
 
+
 		</div>
-		<div id="roomError"></div>
+		
+		<div id="rotatePhoneScreenWrapper">
+			<div id="rotatePhoneScreen">
+				<img src="img/mobile/rotate_arrow.png" id="rotateArrow">
+				<img src="img/mobile/rotate_phone.png" id="rotatePhone">
+				<div id="rotateCopy">DRAAI JE TELEFOON</div>	
+			</div>
+		</div>
+
 		<div id="blackOverlay"></div>
 	</div>
 
 	<script src="https://s0.2mdn.net/ads/studio/cached_libs/tweenmax_1.18.5_23b0de6da0ee295131e32a500470610c_min.js"></script>
+	<script src="js/game.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 
     <script src="/socket.io/socket.io.js"></script>    

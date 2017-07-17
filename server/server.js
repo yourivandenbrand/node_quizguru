@@ -20,116 +20,130 @@ server.listen(port, () => {
     console.log(`Server is up on ${port}`)
 });
 
-fs.readdir("./public/img/characters", function(err,files){
-    if(err){
-        return console.error(err);
-    }
-    files.forEach(function(file){
-        characters.push(file);
-    });
+// fs.readdir("./public/img/characters", function(err,files){
+//     if(err){
+//         return console.error(err);
+//     }
+//     files.forEach(function(file){
+//         characters.push(file);
+//     });
 
-})
+// })
 
 app.use(express.static(publicPath));
 
 io.on('connection', function(socket){
-
-
-
+	
     // HOST FUNCTIONS
-    socket.on('createGame', function() { 
+    socket.on('createGame', function(){
+		//GENERATE UNIQUE GAME ID
+		// var room = createGameId();
+		var room = 3;
 
-        //GENERATE UNIQUE GAME ID
-    	var room = createGameId();
+	    checkRoomExists(room);
 
-        checkRoomExists(room);
+		var obj = {
+	        host: socket.id,
+	        hostid: socket.id,
+	        room: room,
+	        socketid: socket.id
+	    };
 
-    	var obj = {
-            host: socket.id,
-            room: room
-        };
+	    players.push(obj);
 
-        players.push(obj);
+	    //JOIN CREATED GAME
+	    socket.join(obj.room);
 
-        //JOIN CREATED GAME
-        socket.join(obj.room);
+	    //EMIT ROOM NUMBER + HOST ID TO HOST
+	    io.to(obj.host).emit("sendRoom", obj);
 
-        //EMIT ROOM NUMBER + HOST ID TO HOST
-        io.to(obj.host).emit("sendRoom", obj);
-
-        console.log("Room " + obj.room + " created, with hostID " + obj.host)
+	    console.log("Room " + obj.room + " created, with hostID " + obj.host)
     });
-
-
 
     // PLAYER FUNCTIONS
-    socket.on('playerJoinGame', function(data) {
-        io.to(socket.id).emit('fillCharacters', characters); 
-        var roomExists = false;
-        console.log(players.length);
-        for(var i = 0; i < players.length; i++){
-            console.log(data.room);
-            console.log(players[i].room);
-            if(data.room == players[i].room){
-                roomExists = true;
-            }
-        }
-        console.log(roomExists);
-        if(roomExists){
-            var player = {
-                hostid: Object.keys(io.sockets.adapter.rooms[data.room].sockets)[0],
-                name: data.name,
-                room: data.room,
-                socketid: socket.id,
-                ready: false
-            };
-            
-            //PLAYER JOIN ROOM
-            socket.join(player.room);
-            //PUT PLAYER IN PLAYERS LIST
-            players.push(player);
-            
-            //EMIT PLAYER TO HOST
-            io.to(player.hostid).emit('hostJoinPlayerUpdate', getPlayersInRoom(players, player.room)); 
-            io.to(player.socketid).emit('playerUpdate', player); 
-        }else{
-            io.to(socket.id).emit('roomError', data);    
-        }
+    socket.on('playerJoinGame', function(data){
+    	// io.to(socket.id).emit('fillCharacters', characters); 
+	    var roomExists = false;
+	    for(var i = 0; i < players.length; i++){
+	        
+	        if(data.room == players[i].room){
+	            roomExists = true;
+	        }
+	    }
+	    if(roomExists){
+	        var player = {
+	            hostid: Object.keys(io.sockets.adapter.rooms[data.room].sockets)[0],
+	            name: data.name,
+	            room: data.room,
+	            socketid: socket.id,
+	            ready: false
+	        };
+	        
+	        //PLAYER JOIN ROOM
+	        socket.join(player.room);
+	        //PUT PLAYER IN PLAYERS LIST
+	        players.push(player);
+
+	        var playerNumberInRoom;
+			var allPlayersInRoom = getPlayersInRoom(players, player.room);
+
+	        for (var i = 0; i < allPlayersInRoom.length; i++) {
+				if(allPlayersInRoom[i].socketid == player.socketid){
+					playerNumberInRoom = i+1;
+				}
+			}
+	        
+	        //EMIT PLAYER TO HOST
+	        io.to(player.hostid).emit('hostJoinPlayerUpdate', {allPlayersInRoom,playerNumberInRoom}); 
+	        io.to(player.socketid).emit('playerUpdate', player); 
+	    }else{
+	        io.to(socket.id).emit('roomError', data);    
+	    }
     });
-
-    socket.on('createCharacter', function(data) {
-        var player = findPlayerById(socket);
-        player.ready = true;
-        var allPlayersInRoom = getPlayersInRoom(players, player.room);
-       
-        var playerNumberInRoom = allPlayersInRoom.indexOf(player.socketid);
-
-        io.to(player.hostid).emit('setReadyPlayer', player.name);
-        io.to(player.hostid).emit('hostPlayerReadyUpdate', getPlayersInRoom(players, player.room)); 
-
-        
-    });
-
     
-    socket.on('disconnect', function(){
-        if(players != ""){
-            var player;
-            for(var i = 0; i < players.length; i++){
-                if(socket.id === players[i].socketid){
-                    console.log("DISCONNECTED PLAYER " + socket.id + " FROM HOSTID " + players[i].hostid);
-                    var tempPlayerHostId = players[i].hostid;
-                    var tempPlayerName = players[i].name;
-                    var tempPlayerRoom = players[i].room;
-                    players.splice(i, 1);     
-                    io.to(tempPlayerHostId).emit('hostDisconnectPlayerUpdate', tempPlayerName); 
-                    io.to(tempPlayerHostId).emit('hostPlayerReadyUpdate', getPlayersInRoom(players, tempPlayerRoom)); 
+    socket.on('setupCharacter', function(charSelect){
+		var player = findPlayerById(socket);
+			player.ready = true;
 
-                }
-            }
-        }
-    })
+		var playerNumberInRoom;
+		var allPlayersInRoom = getPlayersInRoom(players, player.room);
+
+		for (var i = 0; i < allPlayersInRoom.length; i++) {
+			if(allPlayersInRoom[i].socketid == player.socketid){
+				playerNumberInRoom = i+1;
+			}
+		}
+
+		io.to(player.hostid).emit('fillCharacter', {playerNumberInRoom, charSelect});
+		io.to(player.hostid).emit('setReadyPlayer', player.name);
+		io.to(player.hostid).emit('hostPlayerReadyUpdate', getPlayersInRoom(players, player.room));
+    });
+
+    socket.on('disconnect', function(){
+    	if(players != ""){
+	        var player;
+	        for(var i = 0; i < players.length; i++){    
+	            if(socket.id === players[i].socketid){
+	                var tempPlayerHostId = players[i].hostid;
+	                var tempPlayerName = players[i].name;
+	                var tempPlayerRoom = players[i].room;
+	                io.to(tempPlayerHostId).emit("startReconnectTimer", players[i].name);
+	            }
+	        }
+
+	        if(socket.id == tempPlayerHostId){
+	            // io.sockets.in(tempPlayerRoom).leave(tempPlayerRoom);            
+	            socket.broadcast.to(tempPlayerRoom).emit('hostDisconnect', 'nice game');    
+	        }else{
+	            players.splice(i, 1);     
+	            io.to(tempPlayerHostId).emit('hostDisconnectPlayerUpdate', tempPlayerName); 
+	            io.to(tempPlayerHostId).emit('hostPlayerReadyUpdate', getPlayersInRoom(players, tempPlayerRoom));
+	        }
+	    }
+    });
 
 })
+
 
 function findPlayerById(socket){
     var player;

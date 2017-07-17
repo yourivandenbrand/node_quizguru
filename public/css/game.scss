@@ -1,0 +1,324 @@
+#game{
+    width: 100%;
+    height: 100%;
+    font-family: 'Passion One', cursive;
+    background: url(../img/background.jpg);
+    background-size: auto 100%;
+    background-repeat: repeat-x;
+    background-position: left top;
+    color: #fff;
+    overflow: hidden;
+}
+
+#roofWrapper {
+    top: 75px;
+    left: 0px;
+    height: 100px;
+    width: 100%;
+    background: url(../img/roof_bars.png);
+    background-size: auto 100%;
+}
+
+
+#logoWrapper{
+    left: 50%;
+    top: -10px;
+    transform: translate(-50%);
+    width:673px;
+    height: 385px;
+
+
+    #logoBackground{top:4px}
+    #quizCopyBG{top: 75px; left: 87px;}
+    #quizCopyFG{top: 73px; left: 76px;}
+    .circle1{ top: 235px; left: 167px;}
+    .circle2{ top: 236px; left: 254px;}
+    .circle3{ top: 236px; left: 336px;}
+    .circle4{ top: 236px; left: 414px;}
+
+    #subCopyG{top: 258px; left: 188px;}
+    #subCopyU{top: 258px; left: 280px;}
+    #subCopyR{top: 258px; left: 362px;}
+    #subCopyU2{top: 258px; left: 445px;}
+
+    #subCopyGOut{top: 258px; left: 188px;}
+    #subCopyUOut{top: 258px; left: 280px;}
+    #subCopyROut{top: 258px; left: 362px;}
+    #subCopyU2Out{top: 258px; left: 445px;}
+
+    .lightsWrapper{
+        .lightBulb{
+            width:13px;
+            height: 13px;
+            background-color: red;
+            left: 344px;
+            top:1px;
+            border-radius: 50%;
+            border: 1px solid #a69526;
+            background: #e8d44d; /* Old browsers */
+            background: -webkit-linear-gradient(#e8d44d 0%, #cab840 100%);
+            background: -o-linear-gradient(#e8d44d 0%, #cab840 100%);
+            background: linear-gradient(#e8d44d 0%, #cab840 100%); /* FF3.6-15 */ /* Chrome10-25,Safari5.1-6 */ /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e8d44d', endColorstr='#cab840',GradientType=0 ); /* IE6-9 */
+        }
+    }
+
+}
+
+.tunnel{    
+    bottom: 19.7%;
+    width: 450px;
+    left: 50%;
+    transform: translate(-50%);
+    overflow: hidden;
+}
+
+.helpBtn{
+    width:133px;
+    right: 10px;
+    top: 10px;
+}
+
+#deskContainer{
+    bottom: 0px;
+    width: 100%;
+    height: 338px;
+
+    .deskIntro{
+        // top: -30px;
+        // left: 430px;
+        width: 204px;
+        z-index: 1;
+    }
+
+    .deskWrapper{
+        position: relative;
+        width: 185px;
+        height: 300px;
+        display: inline-block;
+    }
+    // .deskWrapper:nth-child(1){ left:10%;}
+    // .deskWrapper:nth-child(2){left: 30%; top: 50px; }
+    // .deskWrapper:nth-child(3){top: 50px;left: 50%;}
+    // .deskWrapper:nth-child(4){left: 72%;}
+
+    .silhouette{
+        top: -140px;
+        left: 26px;
+        width: 160px;
+    }
+
+    .deskNameWrapper{
+        top: 10px;
+        left: 20px;
+        width: 168px;
+        height: 44px;
+        text-align: center;
+        font-family: 'AvenirNext LT Pro';
+        z-index: 1;
+
+        .deskNameBg{
+            bottom: 11px;
+            font-size: 35px;
+            line-height: 1px;
+            letter-spacing: 1px;
+            width: 168px;
+            text-align: center;
+            color: #88771a;
+            text-shadow: -1px -1px 0 #9c7d11, 1px -1px 0 #9c7d11, -1px 1px 0 #9c7d11, 1px 1px 0 #9c7d11;
+        }
+        .deskName{
+            bottom: 11px;
+            font-size: 35px;
+            line-height: 1px;
+            letter-spacing: 1px;
+            width: 168px;
+            text-align: center;
+            color: #f1f1f1;
+            text-shadow: -1px -1px 0 #9c7d11, 1px -1px 0 #9c7d11, -1px 1px 0 #9c7d11, 1px 1px 0 #9c7d11;
+        }
+    }
+
+    .deskScore{
+        font-family: 'LLPixel';
+        text-align: center;
+        top: 82px;
+        left: 20px;
+        width: 163px;
+        height: 70px;
+        line-height: 70px;
+        font-size:38px;
+        color:#e8d349;
+        z-index: 1;
+
+        &.ready{
+           &:after{
+                position: absolute;
+                content: '';
+                top: 62px;
+                left: 15px;
+                width: 128px;
+                height: 55px;
+                background: url(../img/deskReady.png);
+                background-size: contain;
+                background-repeat: no-repeat;
+           } 
+        }
+    }
+}
+
+.characterDesktopWrapper{
+        position: absolute;
+        top: -300px;
+        left: -49px;
+        width: 308px;
+        height: 505px;
+        margin: 0px 0px;
+        display: inline-block;
+
+        .headWrapper{
+            left: 50%;
+            transform: translate(-50%);   
+        }
+        .rightArmWrapper{
+            top: 210px;
+            left:226px;
+            transform-origin: 50% 10%;
+            width:82px;
+            height: 288px;
+        }
+
+        .leftArmWrapper{
+            top: 210px;
+            left:0px;
+            transform-origin: 50% 10%;
+            width:82px;
+            height: 288px;
+        }
+
+        .hair{
+            left: 50%;
+            transform: translate(-50%);
+        }
+        .face{
+            left: 50%;
+            transform: translate(-50%);
+            top:56px;
+        }
+        .body{
+            left: 50%;
+            transform: translate(-50%);
+            top: 177px;
+        }
+        .leftUpperArm{
+            position: absolute;
+            // top: 210px;
+        }
+        .leftLowerArm{
+            position: absolute;
+            top: 150px;
+            transform-origin:50% 0%;
+        }
+        .rightUpperArm{
+            position: absolute;
+        }
+        .rightLowerArm{
+            position: absolute;
+            top: 150px;
+            transform-origin:50% 0%;        
+        }        
+    }
+
+.btn{
+    border-radius: 10px;
+    font-family: 'AvenirNext LT Pro';
+    text-transform: uppercase;
+    z-index: 1;
+}
+.QRcode{
+        top: 210px;
+        left: 70px;
+    .QR{
+        .QRimage{
+            width:100px;
+        }
+    }
+    .phone{
+        top:-50px;
+        left:-20px;
+        transform-origin: 50% 50%;
+        width: 140px;
+        height: 241px;
+        opacity: 0;
+    .phoneScan{
+        top:26px;
+        width:130px;
+        height: 3px;
+        background-color: #efe391;
+    }
+        .phoneIcon{
+            width:140px;
+        }
+
+    }
+
+    .roomId{
+        top:25px;
+        left:130px;
+        font-family: 'Passion One';
+        width: 400px;
+        height: 200px;
+        // background: red;
+        font-weight: normal;
+        font-style: normal;
+        font-size: 30px;
+
+        .roomIdCopyTitle{
+            font-weight: normal;
+            font-style: normal;
+            text-transform: uppercase;
+            width:100%;
+            letter-spacing: 2px;
+        }
+        .roomIdCopy{
+            letter-spacing: 1px;
+            font-size: 20px;
+            top:31px;
+        }
+    }
+}
+
+.startBtn{
+    width: 360px;
+    height: 80px;
+    text-align: center;
+    border: 2px solid #c43636;
+    bottom: 40px;
+    left: 50%;
+    transform: translate(-50%);
+    pointer-events:auto;
+    opacity: 0.8;
+    background: rgba(100,100,100,0.5);
+
+    &.ready{
+        background: rgba(229,121,121,1);
+        background: -moz-linear-gradient(top, rgba(229,121,121,1) 0%, rgba(202,85,85,1) 50%, rgba(202,85,85,1) 100%);
+        background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(229,121,121,1)), color-stop(50%, rgba(202,85,85,1)), color-stop(100%, rgba(202,85,85,1)));
+        background: -webkit-linear-gradient(top, rgba(229,121,121,1) 0%, rgba(202,85,85,1) 50%, rgba(202,85,85,1) 100%);
+        background: -o-linear-gradient(top, rgba(229,121,121,1) 0%, rgba(202,85,85,1) 50%, rgba(202,85,85,1) 100%);
+        background: -ms-linear-gradient(top, rgba(229,121,121,1) 0%, rgba(202,85,85,1) 50%, rgba(202,85,85,1) 100%);
+        background: linear-gradient(to bottom, rgba(229,121,121,1) 0%, rgba(202,85,85,1) 50%, rgba(202,85,85,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e57979', endColorstr='#ca5555', GradientType=0 );
+        opacity: 1;
+    }
+
+    .startBtnCopy{
+        text-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
+        width: 360px;
+        height: 80px; 
+        text-align: center;
+        line-height: 80px;   
+        font-size: 28px;
+        pointer-events:none;
+    }
+}

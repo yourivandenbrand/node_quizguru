@@ -25,6 +25,12 @@ div, input, span, audio, video, img, h1, input {
 #hscreenTitle div {
   position: relative; }
 
+#host {
+  width: 100%;
+  height: 100%; }
+  #host div {
+    position: absolute; }
+
 #player {
   width: 100%;
   height: 100%;
@@ -34,6 +40,34 @@ div, input, span, audio, video, img, h1, input {
   background-size: auto 100%;
   background-repeat: repeat-x;
   background-position: left top; }
+  #player #rotatePhoneScreenWrapper {
+    width: 100%;
+    height: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); }
+    #player #rotatePhoneScreenWrapper #rotatePhoneScreen {
+      width: 1600px;
+      height: 900px;
+      left: 0px;
+      right: 0px;
+      margin: auto; }
+      #player #rotatePhoneScreenWrapper #rotatePhoneScreen #rotateArrow {
+        top: 240px;
+        left: 490px; }
+      #player #rotatePhoneScreenWrapper #rotatePhoneScreen #rotatePhone {
+        left: 800px;
+        top: 100px; }
+      #player #rotatePhoneScreenWrapper #rotatePhoneScreen #rotateCopy {
+        font-size: 85px;
+        bottom: 150px;
+        left: 50%;
+        transform: translate(-50%);
+        letter-spacing: 2.1px;
+        white-space: nowrap;
+        text-shadow: -3px -3px 0 #d46262,   3px -3px 0 #d46262, -3px 3px 0 #d46262, 3px 3px 0 #d46262;
+        text-align: center;
+        color: #fff; }
   #player #playerScreenWrapper {
     width: 100%;
     height: 100%;
@@ -51,7 +85,8 @@ div, input, span, audio, video, img, h1, input {
         height: 100%; }
         #player #playerScreenWrapper #playerScreen #mobileIntroScreen #connectText,
         #player #playerScreenWrapper #playerScreen #mobileIntroScreen #nameText,
-        #player #playerScreenWrapper #playerScreen #mobileIntroScreen #roomNumberText {
+        #player #playerScreenWrapper #playerScreen #mobileIntroScreen #roomNumberText,
+        #player #playerScreenWrapper #playerScreen #mobileIntroScreen #roomError {
           font-size: 85px;
           top: 200px;
           left: 50%;
@@ -60,6 +95,14 @@ div, input, span, audio, video, img, h1, input {
           white-space: nowrap;
           text-shadow: -3px -3px 0 #d46262,   3px -3px 0 #d46262, -3px 3px 0 #d46262, 3px 3px 0 #d46262;
           text-align: center; }
+        #player #playerScreenWrapper #playerScreen #mobileIntroScreen #roomError {
+          top: 800px;
+          color: #F00;
+          text-shadow: none;
+          font-size: 40px;
+          text-align: left;
+          left: 50px;
+          transform: none; }
         #player #playerScreenWrapper #playerScreen #mobileIntroScreen #roomNumberText {
           top: 580px;
           left: 50px;
@@ -176,6 +219,20 @@ div, input, span, audio, video, img, h1, input {
         #player #playerScreenWrapper #playerScreen #mobileCharacterScreen #arrowRight {
           left: auto;
           right: 25px; }
+      #player #playerScreenWrapper #playerScreen #mobileWaitingScreen {
+        width: 100%;
+        height: 100%; }
+        #player #playerScreenWrapper #playerScreen #mobileWaitingScreen #messageCopy {
+          font-size: 85px;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          letter-spacing: 2.1px;
+          white-space: nowrap;
+          text-shadow: -3px -3px 0 #d46262,   3px -3px 0 #d46262, -3px 3px 0 #d46262, 3px 3px 0 #d46262;
+          text-align: center; }
+          #player #playerScreenWrapper #playerScreen #mobileWaitingScreen #messageCopy span {
+            position: relative; }
       #player #playerScreenWrapper #playerScreen #logo {
         left: 50%;
         top: 30px;
